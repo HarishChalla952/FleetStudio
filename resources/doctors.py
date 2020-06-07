@@ -16,19 +16,19 @@ class Doctor(Resource):
     
 
     @jwt_required
-    def post(self, doctor_name):
+    def post(self):
         claims = get_jwt_claims()
         if claims['role'] == "DOCTOR" :
-            if DoctorModel.find_by_name(doctor_name):
-                return {'message': "An Doctor with name '{}' already exists.".format(doctor_name)}, 400
+            if DoctorModel.find_by_name(claims['username']):
+                return {'message': "An Doctor with name '{}' already exists.".format(claims['username'])}, 400
 
             data = Doctor.doctor_parser.parse_args()
-            doc_details = DoctorModel(doctor_name, **data)
+            doc_details = DoctorModel(claims['username'], **data)
 
             try:
                 doc_details.save_to_db()
             except Exception as e:
-                return {"message" : "Unable to insert doctor {} due to exception {}".format(doctor_name,e)}
+                return {"message" : "Unable to insert doctor {} due to exception {}".format(claims['username'],e)}
 
             return doc_details.json()
 

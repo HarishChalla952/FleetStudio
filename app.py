@@ -35,7 +35,7 @@ def add_claims_to_jwt(identity):
 api.add_resource(UserRegister, '/register')
 api.add_resource(UserLogin, '/login')
 api.add_resource(UserLogout, '/logout')
-api.add_resource(Doctor, '/doctor/<string:doctor_name>')
+api.add_resource(Doctor, '/doctor')
 api.add_resource(PatientsHistory, '/patientHistory')
 api.add_resource(Patient, '/medicineSuggestion')
 api.add_resource(MedicinesHistory, '/medicinesHistory')

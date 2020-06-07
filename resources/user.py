@@ -15,7 +15,7 @@ class UserRegister(Resource):
     def post(self):
         
         data = UserRegister._user_parser.parse_args()
-        if UserModel.find_by_username(data['username']):
+        if UserModel.find_by_username(data['username'].upper()):
             return {"message": "A user with that username already exists"}, 400
 
         user = UserModel(data['username'], data['password'], data['role'])
@@ -33,7 +33,7 @@ class UserLogin(Resource):
     def post(cls):
         data = UserLogin._login_parser.parse_args()
 
-        user = UserModel.find_by_username(data['username'])
+        user = UserModel.find_by_username(data['username'].upper())
 
         #authentication function
         if user and safe_str_cmp(user.password, data['password']):
