@@ -25,17 +25,11 @@ def create_tables():
 jwt = JWTManager(app)
 
 
-# @jwt.user_claims_loader
-# def add_claims_to_access_token(user):
-#     user_details=UserModel.find_by_userid(user)
-#     print("this is user role {}".format(user_details['role']))
-#     return {'role': user_details['role']}
-
 @jwt.user_claims_loader
 def add_claims_to_jwt(identity):
     user_details=UserModel.find_by_userid(identity)
     print("this is user role  add claims to jwt {}".format(user_details['role']))
-    return {'role': user_details['role']}
+    return {'role': user_details['role'], 'username':user_details['username']}
 
 
 api.add_resource(UserRegister, '/register')
@@ -43,7 +37,7 @@ api.add_resource(UserLogin, '/login')
 api.add_resource(UserLogout, '/logout')
 api.add_resource(Doctor, '/doctor/<string:doctor_name>')
 api.add_resource(PatientsHistory, '/patientHistory')
-api.add_resource(Patient, '/medicineSuggestion/<string:patient_name>')
+api.add_resource(Patient, '/medicineSuggestion')
 api.add_resource(MedicinesHistory, '/medicinesHistory')
 api.add_resource(MedicineRespond, '/medicinesRespond/<string:patientName>')
 api.add_resource(HealthSuggestion, '/healthSuggestion/<string:patientName>')

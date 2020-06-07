@@ -17,12 +17,12 @@ class Patient(Resource):
     patient_parser.add_argument('suggestion', type=str, required=False, help="This field gives details of suggestions")
 
     @jwt_required
-    def post(self, patient_name):
+    def post(self):
         claims = get_jwt_claims()
         if claims['role'] == "PATIENT" :
             data = Patient.patient_parser.parse_args()
-
-            patient_details = PatientModel(patient_name, data['doctor_id'], data['gender'],data['symptoms'],\
+            print("these are patient details {} {}".format(claims['role'], claims['username']))
+            patient_details = PatientModel(claims['username'], data['doctor_id'], data['gender'],data['symptoms'],\
                               data['disease'], data['prescription'], data['suggestion'])
             try:            
                 patient_details.save_to_db()
@@ -38,9 +38,8 @@ class MedicinesHistory(Resource):
     @jwt_required
     def get(self):
         claims = get_jwt_claims()
-        user_id = get_jwt_identity()
         if claims['role'] == "PATIENT" :
-            medicinesHistory = [patient.json() for patient in PatientModel.query.filter_by(patient_id=user_id)]
+            medicinesHistory = [patient.json() for patient in PatientModel.query.filter_by(patient_name = (claims['username']) )]
             return {"Medicines history" : medicinesHistory}, 200
         else:
             return {"message" : "Only Patients can view the medicines history "}, 401
