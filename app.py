@@ -29,7 +29,7 @@ jwt = JWTManager(app)
 def add_claims_to_jwt(identity):
     user_details=UserModel.find_by_userid(identity)
     print("this is user role  add claims to jwt {}".format(user_details['role']))
-    return {'role': user_details['role'], 'username':user_details['username']}
+    return {'role': user_details['role'], 'username':user_details['username'], 'id':user_details['id']}
 
 
 api.add_resource(UserRegister, '/register')

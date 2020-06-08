@@ -23,7 +23,7 @@ class Doctor(Resource):
                 return {'message': "An Doctor with name '{}' already exists.".format(claims['username'])}, 400
 
             data = Doctor.doctor_parser.parse_args()
-            doc_details = DoctorModel(claims['username'], **data)
+            doc_details = DoctorModel(claims['username'], **data, doc_id=claims['id'] )
 
             try:
                 doc_details.save_to_db()
@@ -40,9 +40,8 @@ class PatientsHistory(Resource):
     @jwt_required
     def get(self):
         claims = get_jwt_claims()
-        user_id = get_jwt_identity()
         if claims['role'] == "DOCTOR" :
-            patientsHistory = [doctor.patients_json() for doctor in DoctorModel.query.filter_by(id=user_id)]
+            patientsHistory = [doctor.patients_json() for doctor in DoctorModel.query.filter_by(doctor_name=claims['username'])]
             return {"patients history" : patientsHistory}, 200
         else:
             return {"message" : "Only Doctors can view the patient history "}, 401
@@ -68,17 +67,18 @@ class MedicineRespond(Resource):
                 except Exception as e:
                     return {"message" : "Unable to insert doctors prescription due to error {}".format(e)}
                 return patient.json()
-            elif patient and (patient['doctor_id'] is None):
-                patient['doctor_id'] = user_id
-                patient['disease'] = data['disease']
-                patient['prescription']= data['prescription']
+            elif patient and (patient.doctor_id is None):
+                patient.doctor_id = user_id
+                patient.disease = data['disease']
+                patient.prescription= data['prescription']
                 try:
                     patient.save_to_db()
                 except Exception as e:
                     return {"message" : "Unable to insert doctors prescription due to error {}".format(e)}
                 return patient.json()
-            elif patient and patient['doctor_id']!=user_id:
-                return {"message" : "Only the Doctor {} can treat this patient".format(patient['doctor_id'])}
+            elif patient and patient.doctor_id != user_id:
+                return {"message" : "Only the Doctor {} can treat this patient".format(patient.doctor_id)}
+            
             else:            
                 return {"message" : "Patient {} doesn't exist.".format(patientName)}
         return {"message" : "Only doctors can give prescriptions."}   

@@ -5,7 +5,7 @@ class PatientModel(db.Model):
 
     patient_id = db.Column(db.Integer, primary_key=True)
     patient_name = db.Column(db.String(80))
-    doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.id'))
+    doctor_id = db.Column(db.Integer, db.ForeignKey('doctors.doc_id'))
     gender = db.Column(db.String(6))
     symptoms = db.Column(db.String(256))
     disease = db.Column(db.String(256))

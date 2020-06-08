@@ -7,13 +7,15 @@ class DoctorModel(db.Model):
     doctor_name = db.Column(db.String(80))
     specilization = db.Column(db.String(80))
     gender = db.Column(db.String(6))
+    doc_id = db.Column(db.Integer)
 
     patients = db.relationship('PatientModel', lazy='dynamic')
 
-    def __init__(self, doctor_name, specilization, gender):        
+    def __init__(self, doctor_name, specilization, gender,doc_id):        
         self.doctor_name = doctor_name
         self.specilization = specilization
         self.gender = gender.upper()
+        self.doc_id = doc_id
 
     def save_to_db(self):
         db.session.add(self)
