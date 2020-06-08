@@ -1,0 +1,63 @@
+/register
+-This API designed for registration.
+-User can give username and password for registration.
+-If any other user with that username is registered then it throws error as user already exists.
+
+/login
+-This API is designed for login.
+-User can give username and password for login.
+-Once the username and password are verified then it return access token.
+-Access token is used in other APIs to access information.
+
+/logout
+-This API is designed for logout.
+-Loggedin user provides access token which he got during login.
+-With the help of access token we can find out which user is logged in and the function logout the user.
+-Logging out is temporarily adding to BLACKLIST set so that the user has to login again if he wants to access information.
+
+/medicineSuggestion
+-This API is about patient asking for doctor suggestion.
+-To access this API user has to login and provide access token, if the access token is verified as patient then API allows.
+-If the logged in user is not patient then access token verification gets failed and throws error as only patients can access this URL.
+-Verified patient can ask for medicine suggestion by telling user's symptoms.
+-If the patient asks for medicine suggestion to any particular doctor, only that particular doctor can treat him.
+-If the patient doesn't mention any doctor then any doctor can give medicine suggestion to that patient.
+-Doctors cannot access this URL.
+
+/medicinesHistory
+-This URL is designed to get medicin history of patient.
+-To access this URl user has to provide access token.
+-Once the accesstoken is verified as patient the user can get medicines history.
+-Restricted to patients only.
+
+/doctor
+-This API is designed to enter the details of doctor.
+-To access this API doctor has to login and provide access token to this API.
+-The access token will be verified whether loggedin user is doctor or not.
+-If the loggedin user's access is not doctor then this API will restrict the access and throws error only doctors can post the data.
+-If the loggedin user is doctor, user can post the details after verifying access token.
+
+/medicinesRespond
+-This API is to designed to give medicine response to patients.
+-To access this URL loggedin doctor has to provide access token.
+-If the patient has asked for particular doctor then that doctor only can treat patient, other doctors cannot prescribe medicines.
+-If the patient doesn't ask for particular doctor, any doctor can treat that patient.
+-Patients cannot access this URL,it is restricted only for doctors.
+
+
+/patientHistory
+-This API is designed to get patient history of the doctor.
+-URL is restricted to doctors only and doctor has to provide access token to get verified.
+-If the loggedin user is doctor, user can get patients history.
+-Patientscannot access this URL
+
+
+/healthSuggestion
+-This API is designed to give suggestion to patients.
+-User has to provide access token to hit this URL.
+-If the loggedin user is doctor then doctor can give suggestionto any patient.
+-If the loggedin user is not doctor then it throws error as only doctors can access this URL.
+-API is restricted to doctors.
+
+
+

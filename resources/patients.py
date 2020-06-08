@@ -30,7 +30,7 @@ class Patient(Resource):
             try:            
                 patient_details.save_to_db()
             except Exception as e:
-                return{"message": "Unable to insert patient {} data due to error {}". format(e)}
+                return{"message" : "Unable to insert patient {} data due to error {}". format(e)}
 
             return patient_details.json()
         return {"message" : "Only Patients can post the details"}
