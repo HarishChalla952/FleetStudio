@@ -65,7 +65,7 @@ BODY:
 }
 
 Doctor Details
-http://127.0.0.1:5000/doctor/<string:doctor_name>      [POST Request]
+http://127.0.0.1:5000/doctor			      [POST Request]
 HEADERS:
 Content-Type : application/json
 Authorization : Bearer {{accesscode provided by login }}
@@ -76,7 +76,7 @@ BODY:
 }
 
 Medicine Suggestion API                                 [POST Request]
-http://127.0.0.1:5000/medicineSuggestion/<string:patient_name>
+http://127.0.0.1:5000/medicineSuggestion
 HEADERS:
 Content-Type : application/json
 Authorization : Bearer {{accesscode provided by login }}
