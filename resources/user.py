@@ -6,14 +6,14 @@ from models.user import UserModel
 from blacklist import BLACKLIST
 
 
-
+#User Registration class
 class UserRegister(Resource):
     _user_parser = reqparse.RequestParser()
     _user_parser.add_argument('username', type=str, required=True, help="This field cannot be blank.")
     _user_parser.add_argument('password', type=str, required=True, help="This field cannot be blank.")
     _user_parser.add_argument('role', type=str, required=True, help="This field for role of user.")
-    def post(self):
-        
+    #checks whether the user exists previosly else registration happens
+    def post(self):        
         data = UserRegister._user_parser.parse_args()
         if UserModel.find_by_username(data['username']):
             return {"message": "A user with that username already exists"}, 400
@@ -24,6 +24,7 @@ class UserRegister(Resource):
         return {"message": "User created successfully."}, 201
 
 
+#Login class
 class UserLogin(Resource):
     _login_parser = reqparse.RequestParser()
     _login_parser.add_argument('username', type=str, required=True, help="This field cannot be blank.")
@@ -46,7 +47,9 @@ class UserLogin(Resource):
         return {'message': 'Invalid Credentials'}, 401
 
 
+#Logout class
 class UserLogout(Resource):
+    #Temporarily adds to blacklist set for logout
     @jwt_required
     def post(self):
         jti = get_raw_jwt()['jti']    #jti is "JWT ID" ,a unique identifier for a JWT.

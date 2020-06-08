@@ -8,13 +8,14 @@ from flask_jwt_extended import (
     get_jwt_claims
 )
 
+
+#Doctor Class to post details
 class Doctor(Resource):
 
     doctor_parser = reqparse.RequestParser()
     doctor_parser.add_argument('specilization', type=str, required=True, help="This field cannot be blank.")
-    doctor_parser.add_argument('gender', type=str, required=True, help="This field cannot be blank.")
-    
-
+    doctor_parser.add_argument('gender', type=str, required=True, help="This field cannot be blank.")    
+    #login required and allow user to post only if user is doctor
     @jwt_required
     def post(self):
         claims = get_jwt_claims()
@@ -36,7 +37,9 @@ class Doctor(Resource):
 
 
 
+#Doctor can get the treated patients history
 class PatientsHistory(Resource):
+    #check whether loggedin user is doctor
     @jwt_required
     def get(self):
         claims = get_jwt_claims()
@@ -46,7 +49,10 @@ class PatientsHistory(Resource):
         else:
             return {"message" : "Only Doctors can view the patient history "}, 401
 
+
+#MedicineRespond class to respond for patients
 class MedicineRespond(Resource):
+    # check whether the loggedin user is doctor
     @jwt_required
     def post(self, patientName):
         prescription_parser = reqparse.RequestParser()
@@ -57,7 +63,7 @@ class MedicineRespond(Resource):
         user_id = get_jwt_identity()
         if claims['role'] == "DOCTOR" :
             patient = PatientModel.find_patient(patientName)
-
+            #check if the patient has asked for any particular doctor
             if patient and patient.doctor_id==user_id:                
                 patient.doctor_id = user_id
                 patient.disease= data['disease']
@@ -67,6 +73,7 @@ class MedicineRespond(Resource):
                 except Exception as e:
                     return {"message" : "Unable to insert doctors prescription due to error {}".format(e)}
                 return patient.json()
+            #If patient doesn't ask for particular doctor any doctor can treat patient
             elif patient and (patient.doctor_id is None):
                 patient.doctor_id = user_id
                 patient.disease = data['disease']
@@ -76,6 +83,7 @@ class MedicineRespond(Resource):
                 except Exception as e:
                     return {"message" : "Unable to insert doctors prescription due to error {}".format(e)}
                 return patient.json()
+            #Restrict the doctor if the user asked doctor and loggedin doctor are different
             elif patient and patient.doctor_id != user_id:
                 return {"message" : "Only the Doctor {} can treat this patient".format(patient.doctor_id)}
             
@@ -84,7 +92,10 @@ class MedicineRespond(Resource):
         return {"message" : "Only doctors can give prescriptions."}   
 
 
+
+#HealthSuggestion class
 class HealthSuggestion(Resource):
+    #any loggedin doctor can give suggestion to any patient    
     @jwt_required
     def post(self, patientName):
         suggestion_parser = reqparse.RequestParser()

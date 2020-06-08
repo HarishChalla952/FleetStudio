@@ -6,6 +6,8 @@ from flask_jwt_extended import (
     get_jwt_claims
 )
 
+
+#Patient class to ask suggestions
 class Patient(Resource):
 
     patient_parser = reqparse.RequestParser()
@@ -16,6 +18,7 @@ class Patient(Resource):
     patient_parser.add_argument('prescription', type=str, required=False, help="This field gives details of prescription")
     patient_parser.add_argument('suggestion', type=str, required=False, help="This field gives details of suggestions")
 
+    #check whether loggedin user is patient or not, if patient allow user to post details
     @jwt_required
     def post(self):
         claims = get_jwt_claims()
@@ -34,7 +37,9 @@ class Patient(Resource):
 
 
 
+#Patient can get medicine history
 class MedicinesHistory(Resource):
+    #If user is patient then allow user to check medicine history
     @jwt_required
     def get(self):
         claims = get_jwt_claims()
